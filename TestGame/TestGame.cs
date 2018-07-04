@@ -10,6 +10,7 @@ namespace TestGame
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private Texture2D _flagTexture;
 
         public TestGame()
         {
@@ -23,9 +24,12 @@ namespace TestGame
 
             base.Initialize();
         }
+
         protected override void LoadContent()
         {
+            _flagTexture = Content.Load<Texture2D>("flag");
         }
+
         protected override void UnloadContent()
         {
         }
@@ -38,6 +42,12 @@ namespace TestGame
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            _spriteBatch.Begin();
+
+            _spriteBatch.Draw(_flagTexture, GraphicsDevice.Viewport.Bounds, Color.White);
+
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
