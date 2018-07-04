@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace TestGame
 {
@@ -9,8 +10,11 @@ namespace TestGame
     public class TestGame : Game
     {
         private GraphicsDeviceManager _graphics;
+        private KeyboardState _keyboardState;
         private SpriteBatch _spriteBatch;
         private Texture2D _flagTexture;
+        private Texture2D _hulkTexture;
+        private Vector2 _hulkPosition = Vector2.Zero;
 
         public TestGame()
         {
@@ -28,6 +32,7 @@ namespace TestGame
         protected override void LoadContent()
         {
             _flagTexture = Content.Load<Texture2D>("flag");
+            _hulkTexture = Content.Load<Texture2D>("hulk");
         }
 
         protected override void UnloadContent()
@@ -36,6 +41,20 @@ namespace TestGame
 
         protected override void Update(GameTime gameTime)
         {
+            float deltaTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
+
+            _keyboardState = Keyboard.GetState();
+
+            if (_keyboardState.IsKeyDown(Keys.A) || _keyboardState.IsKeyDown(Keys.Left))
+            {
+                _hulkPosition.X -= deltaTime * 32.0f;
+            }
+
+            if (_keyboardState.IsKeyDown(Keys.D) || _keyboardState.IsKeyDown(Keys.Right))
+            {
+                _hulkPosition.X += deltaTime * 32.0f;
+            }
+
             base.Update(gameTime);
         }
 
@@ -46,6 +65,7 @@ namespace TestGame
             _spriteBatch.Begin();
 
             _spriteBatch.Draw(_flagTexture, GraphicsDevice.Viewport.Bounds, Color.White);
+            _spriteBatch.Draw(_hulkTexture, _hulkPosition, Color.White);
 
             _spriteBatch.End();
 
