@@ -43,3 +43,9 @@
 /processorParam:Quality=Best
 /build:song.ogg
 
+#begin brother1.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:brother1.ogg
+
