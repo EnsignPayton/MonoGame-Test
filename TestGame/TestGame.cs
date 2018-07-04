@@ -12,10 +12,12 @@ namespace TestGame
     public class TestGame : Game
     {
         private GraphicsDeviceManager _graphics;
-        private KeyboardState _keyboardState;
-        private KeyboardState _previousState;
-        private MouseState _mouseState;
         private SpriteBatch _spriteBatch;
+
+        private KeyboardState _keyboardState;
+        private KeyboardState _oldKeyboardState;
+        private MouseState _mouseState;
+        private MouseState _oldMouseState;
 
         private Song _song;
         private SoundEffect _brotherEffect;
@@ -37,7 +39,8 @@ namespace TestGame
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _previousState = Keyboard.GetState();
+            _oldKeyboardState = Keyboard.GetState();
+            _oldMouseState = Mouse.GetState();
 
             base.Initialize();
         }
@@ -89,15 +92,15 @@ namespace TestGame
                 _hulkPosition.Y -= deltaTime * 32.0f;
             }
 
-            if (_keyboardState.IsKeyDown(Keys.Space) ||
-                _mouseState.LeftButton == ButtonState.Pressed ||
-                _mouseState.RightButton == ButtonState.Pressed)
+            if ((_keyboardState.IsKeyDown(Keys.Space) && _oldKeyboardState.IsKeyUp(Keys.Space)) ||
+                (_mouseState.LeftButton == ButtonState.Pressed && _oldMouseState.LeftButton == ButtonState.Released) ||
+                (_mouseState.RightButton == ButtonState.Pressed && _oldMouseState.RightButton == ButtonState.Released))
             {
                 _brotherInstance.Play();
             }
 
             //Change window mode only on key press, not hold
-            if(_keyboardState.IsKeyDown(Keys.F11) && !_previousState.IsKeyDown(Keys.F11))
+            if (_keyboardState.IsKeyDown(Keys.F11) && !_oldKeyboardState.IsKeyDown(Keys.F11))
             {
                 if (Window.IsBorderless == false)
                 {
@@ -119,8 +122,10 @@ namespace TestGame
                 }
             }
 
+            _oldKeyboardState = _keyboardState;
+            _oldMouseState = _mouseState;
+
             base.Update(gameTime);
-            _previousState = _keyboardState;
         }
 
         protected override void Draw(GameTime gameTime)
