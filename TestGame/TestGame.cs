@@ -13,6 +13,7 @@ namespace TestGame
     {
         private GraphicsDeviceManager _graphics;
         private KeyboardState _keyboardState;
+        private KeyboardState _previousState;
         private MouseState _mouseState;
         private SpriteBatch _spriteBatch;
 
@@ -35,6 +36,8 @@ namespace TestGame
             IsMouseVisible = true;
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            _previousState = Keyboard.GetState();
 
             base.Initialize();
         }
@@ -61,6 +64,11 @@ namespace TestGame
             _keyboardState = Keyboard.GetState();
             _mouseState = Mouse.GetState();
 
+            if (_keyboardState.IsKeyDown(Keys.Escape))
+            {
+                Exit();
+            }
+
             if (_keyboardState.IsKeyDown(Keys.A) || _keyboardState.IsKeyDown(Keys.Left))
             {
                 _hulkPosition.X -= deltaTime * 32.0f;
@@ -71,6 +79,16 @@ namespace TestGame
                 _hulkPosition.X += deltaTime * 32.0f;
             }
 
+            if (_keyboardState.IsKeyDown(Keys.S) || _keyboardState.IsKeyDown(Keys.Down))
+            {
+                _hulkPosition.Y += deltaTime * 32.0f;
+            }
+
+            if (_keyboardState.IsKeyDown(Keys.W) || _keyboardState.IsKeyDown(Keys.Up))
+            {
+                _hulkPosition.Y -= deltaTime * 32.0f;
+            }
+
             if (_keyboardState.IsKeyDown(Keys.Space) ||
                 _mouseState.LeftButton == ButtonState.Pressed ||
                 _mouseState.RightButton == ButtonState.Pressed)
@@ -78,7 +96,31 @@ namespace TestGame
                 _brotherInstance.Play();
             }
 
+            //Change window mode only on key press, not hold
+            if(_keyboardState.IsKeyDown(Keys.F11) && !_previousState.IsKeyDown(Keys.F11))
+            {
+                if (Window.IsBorderless == false)
+                {
+                    //Set window size to resolution of monitor
+                    _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+                    _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+                    //Set position to top left corner, avoids offset by taskbars
+                    this.Window.Position = new Point(0, 0);
+                    Window.IsBorderless = true;
+                    _graphics.ApplyChanges();
+                }
+                else
+                {
+                    //Default window size
+                    _graphics.PreferredBackBufferWidth = 800;
+                    _graphics.PreferredBackBufferHeight = 480;
+                    Window.IsBorderless = false;
+                    _graphics.ApplyChanges();
+                }
+            }
+
             base.Update(gameTime);
+            _previousState = _keyboardState;
         }
 
         protected override void Draw(GameTime gameTime)
