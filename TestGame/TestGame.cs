@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace TestGame
 {
@@ -11,7 +12,11 @@ namespace TestGame
     {
         private GraphicsDeviceManager _graphics;
         private KeyboardState _keyboardState;
+        private MouseState _mouseState;
         private SpriteBatch _spriteBatch;
+
+        private Song _song;
+
         private Texture2D _flagTexture;
         private Texture2D _hulkTexture;
         private Vector2 _hulkPosition = Vector2.Zero;
@@ -19,12 +24,13 @@ namespace TestGame
         public TestGame()
         {
             _graphics = new GraphicsDeviceManager(this);
-
-            Content.RootDirectory = "Content";
         }
 
         protected override void Initialize()
         {
+            Content.RootDirectory = "Content";
+            IsMouseVisible = true;
+
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             base.Initialize();
@@ -32,8 +38,13 @@ namespace TestGame
 
         protected override void LoadContent()
         {
+            _song = Content.Load<Song>("song");
             _flagTexture = Content.Load<Texture2D>("flag");
             _hulkTexture = Content.Load<Texture2D>("hulk");
+
+            // Play and repeat
+            MediaPlayer.Play(_song);
+            MediaPlayer.MediaStateChanged += (s, e) => MediaPlayer.Play(_song);
         }
 
         protected override void UnloadContent()
@@ -45,6 +56,7 @@ namespace TestGame
             float deltaTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
             _keyboardState = Keyboard.GetState();
+            _mouseState = Mouse.GetState();
 
             if (_keyboardState.IsKeyDown(Keys.A) || _keyboardState.IsKeyDown(Keys.Left))
             {

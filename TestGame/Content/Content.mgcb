@@ -37,3 +37,9 @@
 /processorParam:TextureFormat=Color
 /build:hulk.png
 
+#begin song.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:song.ogg
+
