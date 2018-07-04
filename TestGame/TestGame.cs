@@ -22,6 +22,7 @@ namespace TestGame
 
             Content.RootDirectory = "Content";
         }
+
         protected override void Initialize()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
