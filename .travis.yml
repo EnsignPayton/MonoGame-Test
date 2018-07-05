@@ -1,2 +1,8 @@
 language: csharp
-solution: "./MonoGame-Test.sln"
+solution: "MonoGame-Test.sln"
+install:
+  - wget -O MonoGame.pkg "http://teamcity.monogame.net/guestAuth/repository/download/MonoGame_PackageMacAndLinux/.lastSuccessful/MonoGame.pkg?branch_MonoGame=%3Cmaster%3E"
+  - sudo installer -pkg "MonoGame.pkg" -target /
+script:
+  - nuget restore MonoGame-Test.sln
+  - msbuild MonoGame-Test/TestGame.csproj /p:Configuration=Release /v:d /t:Build
