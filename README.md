@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/EnsignPayton/MonoGame-Test.svg?branch=master)](https://travis-ci.org/EnsignPayton/MonoGame-Test)
+
 # MonoGame-Test
 
 MonoGame examples and test projects
