@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -23,7 +22,7 @@ namespace TestGame.Input
             var gamePadState3 = GamePad.GetState(PlayerIndex.Three);
             var gamePadState4 = GamePad.GetState(PlayerIndex.Four);
 
-            CurrentGamePadStates = new List<GamePadState>
+            CurrentGamePadStates = new[]
             {
                 gamePadState1,
                 gamePadState2,
@@ -31,7 +30,7 @@ namespace TestGame.Input
                 gamePadState4
             };
 
-            PreviousGamePadStates = new List<GamePadState>
+            PreviousGamePadStates = new[]
             {
                 gamePadState1,
                 gamePadState2,
@@ -63,12 +62,12 @@ namespace TestGame.Input
         /// <summary>
         /// The gamepad states this frame.
         /// </summary>
-        public List<GamePadState> CurrentGamePadStates { get; }
+        public GamePadState[] CurrentGamePadStates { get; }
 
         /// <summary>
         /// The gamepad states last frame.
         /// </summary>
-        public List<GamePadState> PreviousGamePadStates { get; }
+        public GamePadState[] PreviousGamePadStates { get; }
 
 
         /// <summary>
