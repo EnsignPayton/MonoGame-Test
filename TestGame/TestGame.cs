@@ -61,7 +61,7 @@ namespace TestGame
 
             _inputState.Update();
 
-            if (_inputState.KeyDown(Keys.Escape))
+            if (_inputState.KeyDown(Keys.Escape) || _inputState.GamePadButtonDown(0, Buttons.Back))
             {
                 Exit();
             }

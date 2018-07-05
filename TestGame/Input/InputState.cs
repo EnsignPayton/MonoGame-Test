@@ -60,7 +60,14 @@ namespace TestGame.Input
         /// </summary>
         public MouseState PreviousMouseState { get; private set; }
 
+        /// <summary>
+        /// The gamepad states this frame.
+        /// </summary>
         public List<GamePadState> CurrentGamePadStates { get; }
+
+        /// <summary>
+        /// The gamepad states last frame.
+        /// </summary>
         public List<GamePadState> PreviousGamePadStates { get; }
 
 
@@ -124,7 +131,7 @@ namespace TestGame.Input
         }
 
         /// <summary>
-        /// Gets whether the given mouse button is currently not being pressed
+        /// Gets whether the given mouse button is currently not being pressed.
         /// </summary>
         /// <param name="button">The button to query</param>
         /// <returns>If button is not pressed</returns>
@@ -142,6 +149,40 @@ namespace TestGame.Input
         {
             return MouseButtonToState(button) == ButtonState.Pressed &&
                    MouseButtonToState(button, false) == ButtonState.Released;
+        }
+
+        /// <summary>
+        /// Gets whether the given gamepad button is currently being pressed.
+        /// </summary>
+        /// <param name="index">GamePad index</param>
+        /// <param name="button">The button to query</param>
+        /// <returns>If button is pressed</returns>
+        public bool GamePadButtonDown(int index, Buttons button)
+        {
+            return CurrentGamePadStates[index].IsButtonDown(button);
+        }
+
+        /// <summary>
+        /// Gets whether the given gamepad button is currently not being pressed.
+        /// </summary>
+        /// <param name="index">GamePad index</param>
+        /// <param name="button">The button to query</param>
+        /// <returns>If button is not pressed</returns>
+        public bool GamePadButtonUp(int index, Buttons button)
+        {
+            return CurrentGamePadStates[index].IsButtonUp(button);
+        }
+
+        /// <summary>
+        /// Gets whether the given gamepad button was pressed this frame.
+        /// </summary>
+        /// <param name="index">GamePad index</param>
+        /// <param name="button">The button to query</param>
+        /// <returns>If button was pressed this frame</returns>
+        public bool GamePadButtonPressed(int index, Buttons button)
+        {
+            return CurrentGamePadStates[index].IsButtonDown(button) &&
+                   PreviousGamePadStates[index].IsButtonUp(button);
         }
 
         private ButtonState MouseButtonToState(MouseButton button, bool useCurrent = true)
