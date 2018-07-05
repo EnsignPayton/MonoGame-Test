@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using TestGame.Input;
 
 namespace TestGame
 {
@@ -11,13 +12,9 @@ namespace TestGame
     /// </summary>
     public class TestGame : Game
     {
-        private GraphicsDeviceManager _graphics;
+        private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-
-        private KeyboardState _keyboardState;
-        private KeyboardState _oldKeyboardState;
-        private MouseState _mouseState;
-        private MouseState _oldMouseState;
+        private InputState _inputState;
 
         private Song _song;
         private SoundEffect _brotherEffect;
@@ -38,9 +35,7 @@ namespace TestGame
             IsMouseVisible = true;
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            _oldKeyboardState = Keyboard.GetState();
-            _oldMouseState = Mouse.GetState();
+            _inputState = new InputState();
 
             base.Initialize();
         }
@@ -64,51 +59,51 @@ namespace TestGame
         {
             float deltaTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            _keyboardState = Keyboard.GetState();
-            _mouseState = Mouse.GetState();
+            _inputState.Update();
 
-            if (_keyboardState.IsKeyDown(Keys.Escape))
+            if (_inputState.KeyDown(Keys.Escape))
             {
                 Exit();
             }
 
-            if (_keyboardState.IsKeyDown(Keys.A) || _keyboardState.IsKeyDown(Keys.Left))
+            if (_inputState.KeyDown(Keys.A) || _inputState.KeyDown(Keys.Left))
             {
                 _hulkPosition.X -= deltaTime * 32.0f;
             }
 
-            if (_keyboardState.IsKeyDown(Keys.D) || _keyboardState.IsKeyDown(Keys.Right))
+            if (_inputState.KeyDown(Keys.D) || _inputState.KeyDown(Keys.Right))
             {
                 _hulkPosition.X += deltaTime * 32.0f;
             }
 
-            if (_keyboardState.IsKeyDown(Keys.S) || _keyboardState.IsKeyDown(Keys.Down))
+            if (_inputState.KeyDown(Keys.S) || _inputState.KeyDown(Keys.Down))
             {
                 _hulkPosition.Y += deltaTime * 32.0f;
             }
 
-            if (_keyboardState.IsKeyDown(Keys.W) || _keyboardState.IsKeyDown(Keys.Up))
+            if (_inputState.KeyDown(Keys.W) || _inputState.KeyDown(Keys.Up))
             {
                 _hulkPosition.Y -= deltaTime * 32.0f;
             }
 
-            if ((_keyboardState.IsKeyDown(Keys.Space) && _oldKeyboardState.IsKeyUp(Keys.Space)) ||
-                (_mouseState.LeftButton == ButtonState.Pressed && _oldMouseState.LeftButton == ButtonState.Released) ||
-                (_mouseState.RightButton == ButtonState.Pressed && _oldMouseState.RightButton == ButtonState.Released))
+            if (_inputState.KeyPressed(Keys.Space) ||
+                _inputState.MousePressed(MouseButton.LeftButton) ||
+                _inputState.MousePressed(MouseButton.RightButton))
             {
                 _brotherInstance.Play();
             }
 
-            //Change window mode only on key press, not hold
-            if (_keyboardState.IsKeyDown(Keys.F11) && !_oldKeyboardState.IsKeyDown(Keys.F11))
+            // Change window mode only on key press, not hold
+            if (_inputState.KeyPressed(Keys.F11))
             {
-                if (Window.IsBorderless == false)
+                if (!Window.IsBorderless)
                 {
                     //Set window size to resolution of monitor
                     _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
                     _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+
                     //Set position to top left corner, avoids offset by taskbars
-                    this.Window.Position = new Point(0, 0);
+                    Window.Position = new Point(0, 0);
                     Window.IsBorderless = true;
                     _graphics.ApplyChanges();
                 }
@@ -121,9 +116,6 @@ namespace TestGame
                     _graphics.ApplyChanges();
                 }
             }
-
-            _oldKeyboardState = _keyboardState;
-            _oldMouseState = _mouseState;
 
             base.Update(gameTime);
         }
