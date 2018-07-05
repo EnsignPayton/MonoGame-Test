@@ -33,7 +33,7 @@ namespace TestGame.Entities
 
         public override void Update(GameTime gameTime)
         {
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float deltaTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
             if (_inputState.KeyDown(Keys.A) || _inputState.KeyDown(Keys.Left))
             {
