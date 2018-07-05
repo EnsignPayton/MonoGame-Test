@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace TestGame.Input
@@ -10,8 +12,32 @@ namespace TestGame.Input
     {
         public InputState()
         {
+            CurrentKeyboardState = Keyboard.GetState();
             PreviousKeyboardState = Keyboard.GetState();
+
+            CurrentMouseState = Mouse.GetState();
             PreviousMouseState = Mouse.GetState();
+
+            var gamePadState1 = GamePad.GetState(PlayerIndex.One);
+            var gamePadState2 = GamePad.GetState(PlayerIndex.Two);
+            var gamePadState3 = GamePad.GetState(PlayerIndex.Three);
+            var gamePadState4 = GamePad.GetState(PlayerIndex.Four);
+
+            CurrentGamePadStates = new List<GamePadState>
+            {
+                gamePadState1,
+                gamePadState2,
+                gamePadState3,
+                gamePadState4
+            };
+
+            PreviousGamePadStates = new List<GamePadState>
+            {
+                gamePadState1,
+                gamePadState2,
+                gamePadState3,
+                gamePadState4
+            };
         }
 
         /// <summary>
@@ -34,9 +60,13 @@ namespace TestGame.Input
         /// </summary>
         public MouseState PreviousMouseState { get; private set; }
 
+        public List<GamePadState> CurrentGamePadStates { get; }
+        public List<GamePadState> PreviousGamePadStates { get; }
+
+
         /// <summary>
         /// Update the input state for the current frame.
-        /// Call this at the start of every <see cref="Microsoft.Xna.Framework.Game.Update"/>.
+        /// Call this at the start of every <see cref="Game.Update"/>.
         /// </summary>
         public void Update()
         {
@@ -45,6 +75,12 @@ namespace TestGame.Input
 
             CurrentKeyboardState = Keyboard.GetState();
             CurrentMouseState = Mouse.GetState();
+
+            for (int i = 0; i < 4; i++)
+            {
+                PreviousGamePadStates[i] = CurrentGamePadStates[i];
+                CurrentGamePadStates[i] = GamePad.GetState(i);
+            }
         }
 
         /// <summary>
