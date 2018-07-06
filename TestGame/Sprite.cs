@@ -5,12 +5,23 @@ namespace TestGame
 {
     public class Sprite
     {
+        private Texture2D _texture;
         private Vector2 _position;
         private Vector2 _size;
 
-        public Texture2D Texture { get; set; }
+        public Texture2D Texture
+        {
+            get => _texture;
+            set
+            {
+                _texture = value;
+                Origin = new Vector2(_texture.Width / 2.0f, _texture.Height / 2.0f);
+            }
+        }
 
         public float Rotation { get; set; }
+
+        public Vector2 Origin { get; set; }
 
         public Vector2 Position
         {
@@ -18,7 +29,9 @@ namespace TestGame
             set
             {
                 _position = value;
-                Bounds = new Rectangle(_position.ToPoint(), _size.ToPoint());
+
+                var offset = Texture != null ? Origin / 2 : Vector2.Zero;
+                Bounds = new Rectangle((_position + offset).ToPoint(), _size.ToPoint());
             }
         }
 
@@ -28,7 +41,9 @@ namespace TestGame
             set
             {
                 _size = value;
-                Bounds = new Rectangle(_position.ToPoint(), _size.ToPoint());
+
+                var offset = Texture != null ? Origin / 2 : Vector2.Zero;
+                Bounds = new Rectangle((_position + offset).ToPoint(), _size.ToPoint());
             }
         }
 
@@ -36,7 +51,7 @@ namespace TestGame
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture, Bounds, null, Color.White, Rotation, Vector2.Zero, SpriteEffects.None, 0);
+            spriteBatch.Draw(Texture, Bounds, null, Color.White, Rotation, Origin, SpriteEffects.None, 0);
         }
     }
 }

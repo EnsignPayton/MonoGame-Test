@@ -74,6 +74,11 @@ namespace TestGame.Entities
                 Sprite.Size = Sprite.Size / 2;
             }
 
+            if (Game.InputState.KeyDown(Keys.Z))
+            {
+                Sprite.Rotation += deltaTime;
+            }
+
             base.Update(gameTime);
         }
 
