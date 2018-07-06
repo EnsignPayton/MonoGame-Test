@@ -40,22 +40,22 @@ namespace TestGame.Entities
 
             if (Game.InputState.KeysDown(false, Keys.A, Keys.Left))
             {
-                Sprite.Position = new Vector2(Sprite.Position.X - deltaTime * Velocity, Sprite.Position.Y);
+                Sprite.Position = Sprite.Position.SubX(deltaTime * Velocity);
             }
 
             if (Game.InputState.KeysDown(false, Keys.D, Keys.Right))
             {
-                Sprite.Position = new Vector2(Sprite.Position.X + deltaTime * Velocity, Sprite.Position.Y);
+                Sprite.Position = Sprite.Position.AddX(deltaTime * Velocity);
             }
 
             if (Game.InputState.KeysDown(false, Keys.S, Keys.Down))
             {
-                Sprite.Position = new Vector2(Sprite.Position.X, Sprite.Position.Y + deltaTime * Velocity);
+                Sprite.Position = Sprite.Position.AddY(deltaTime * Velocity);
             }
 
             if (Game.InputState.KeysDown(false, Keys.W, Keys.Up))
             {
-                Sprite.Position = new Vector2(Sprite.Position.X, Sprite.Position.Y - deltaTime * Velocity);
+                Sprite.Position = Sprite.Position.SubY(deltaTime * Velocity);
             }
 
             if (Game.InputState.KeyPressed(Keys.Space) ||
