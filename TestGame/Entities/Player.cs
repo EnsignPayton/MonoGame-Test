@@ -10,10 +10,6 @@ namespace TestGame.Entities
     {
         private SoundEffect _fireEffect;
         private SoundEffectInstance _fireEffectInstance;
-        private Texture2D _sprite;
-        private Vector2 _position;
-        private Point _size;
-        private Rectangle _bounds;
 
         public Player(Game game) : base(game)
         {
@@ -22,14 +18,18 @@ namespace TestGame.Entities
         public new TestGame Game => (TestGame) base.Game;
 
         public float Velocity { get; set; } = 150.0f;
+        public Sprite Sprite { get; private set; }
 
         protected override void LoadContent()
         {
             _fireEffect = Game.Content.Load<SoundEffect>("brother1");
             _fireEffectInstance = _fireEffect.CreateInstance();
-            _sprite = Game.Content.Load<Texture2D>("hulk");
-            _size = new Point(_sprite.Width / 2, _sprite.Height / 2);
-            UpdateBounds();
+
+            Sprite = new Sprite
+            {
+                Texture = Game.Content.Load<Texture2D>("hulk"),
+                Size = new Vector2(256)
+            };
 
             base.LoadContent();
         }
@@ -40,26 +40,22 @@ namespace TestGame.Entities
 
             if (Game.InputState.KeyDown(Keys.A) || Game.InputState.KeyDown(Keys.Left))
             {
-                _position.X -= deltaTime * Velocity;
-                UpdateBounds();
+                Sprite.Position = new Vector2(Sprite.Position.X - deltaTime * Velocity, Sprite.Position.Y);
             }
 
             if (Game.InputState.KeyDown(Keys.D) || Game.InputState.KeyDown(Keys.Right))
             {
-                _position.X += deltaTime * Velocity;
-                UpdateBounds();
+                Sprite.Position = new Vector2(Sprite.Position.X + deltaTime * Velocity, Sprite.Position.Y);
             }
 
             if (Game.InputState.KeyDown(Keys.S) || Game.InputState.KeyDown(Keys.Down))
             {
-                _position.Y += deltaTime * Velocity;
-                UpdateBounds();
+                Sprite.Position = new Vector2(Sprite.Position.X, Sprite.Position.Y + deltaTime * Velocity);
             }
 
             if (Game.InputState.KeyDown(Keys.W) || Game.InputState.KeyDown(Keys.Up))
             {
-                _position.Y -= deltaTime * Velocity;
-                UpdateBounds();
+                Sprite.Position = new Vector2(Sprite.Position.X, Sprite.Position.Y - deltaTime * Velocity);
             }
 
             if (Game.InputState.KeyPressed(Keys.Space) ||
@@ -71,14 +67,12 @@ namespace TestGame.Entities
 
             if (Game.InputState.KeyPressed(Keys.Q))
             {
-                _size = new Point(_size.X * 2, _size.Y * 2);
-                UpdateBounds();
+                Sprite.Size = Sprite.Size * 2;
             }
 
             if (Game.InputState.KeyPressed(Keys.E))
             {
-                _size = new Point(_size.X / 2, _size.Y / 2);
-                UpdateBounds();
+                Sprite.Size = Sprite.Size / 2;
             }
 
             base.Update(gameTime);
@@ -86,14 +80,9 @@ namespace TestGame.Entities
 
         public override void Draw(GameTime gameTime)
         {
-            Game.SpriteBatch.Draw(_sprite, _bounds, Color.White);
+            Sprite.Draw(Game.SpriteBatch);
 
             base.Draw(gameTime);
-        }
-
-        private void UpdateBounds()
-        {
-            _bounds = new Rectangle(_position.ToPoint(), _size);
         }
     }
 }
