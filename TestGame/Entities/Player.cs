@@ -6,19 +6,16 @@ using TestGame.Input;
 
 namespace TestGame.Entities
 {
-    public class Player : DrawableGameComponent
+    public class Player : Entity
     {
         private SoundEffect _fireEffect;
         private SoundEffectInstance _fireEffectInstance;
 
-        public Player(Game game) : base(game)
+        public Player(TestGame game) : base(game)
         {
         }
 
-        public new TestGame Game => (TestGame) base.Game;
-
         public float Velocity { get; set; } = 150.0f;
-        public Sprite Sprite { get; private set; }
 
         protected override void LoadContent()
         {
@@ -80,13 +77,6 @@ namespace TestGame.Entities
             }
 
             base.Update(gameTime);
-        }
-
-        public override void Draw(GameTime gameTime)
-        {
-            Sprite.Draw(Game.SpriteBatch);
-
-            base.Draw(gameTime);
         }
     }
 }
