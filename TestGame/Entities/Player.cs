@@ -21,12 +21,14 @@ namespace TestGame.Entities
 
         public new TestGame Game => (TestGame) base.Game;
 
+        public float Velocity { get; set; } = 150.0f;
+
         protected override void LoadContent()
         {
             _fireEffect = Game.Content.Load<SoundEffect>("brother1");
             _fireEffectInstance = _fireEffect.CreateInstance();
             _sprite = Game.Content.Load<Texture2D>("hulk");
-            _size = new Point(_sprite.Width >> 1, _sprite.Height >> 1);
+            _size = new Point(_sprite.Width / 2, _sprite.Height / 2);
             UpdateBounds();
 
             base.LoadContent();
@@ -38,25 +40,25 @@ namespace TestGame.Entities
 
             if (Game.InputState.KeyDown(Keys.A) || Game.InputState.KeyDown(Keys.Left))
             {
-                _position.X -= deltaTime * 32.0f;
+                _position.X -= deltaTime * Velocity;
                 UpdateBounds();
             }
 
             if (Game.InputState.KeyDown(Keys.D) || Game.InputState.KeyDown(Keys.Right))
             {
-                _position.X += deltaTime * 32.0f;
+                _position.X += deltaTime * Velocity;
                 UpdateBounds();
             }
 
             if (Game.InputState.KeyDown(Keys.S) || Game.InputState.KeyDown(Keys.Down))
             {
-                _position.Y += deltaTime * 32.0f;
+                _position.Y += deltaTime * Velocity;
                 UpdateBounds();
             }
 
             if (Game.InputState.KeyDown(Keys.W) || Game.InputState.KeyDown(Keys.Up))
             {
-                _position.Y -= deltaTime * 32.0f;
+                _position.Y -= deltaTime * Velocity;
                 UpdateBounds();
             }
 
@@ -69,13 +71,13 @@ namespace TestGame.Entities
 
             if (Game.InputState.KeyPressed(Keys.Q))
             {
-                _size = new Point(_size.X << 1, _size.Y << 1);
+                _size = new Point(_size.X * 2, _size.Y * 2);
                 UpdateBounds();
             }
 
             if (Game.InputState.KeyPressed(Keys.E))
             {
-                _size = new Point(_size.X >> 1, _size.Y >> 1);
+                _size = new Point(_size.X / 2, _size.Y / 2);
                 UpdateBounds();
             }
 
