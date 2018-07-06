@@ -38,29 +38,28 @@ namespace TestGame.Entities
         {
             float deltaTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (Game.InputState.KeyDown(Keys.A) || Game.InputState.KeyDown(Keys.Left))
+            if (Game.InputState.KeysDown(false, Keys.A, Keys.Left))
             {
                 Sprite.Position = new Vector2(Sprite.Position.X - deltaTime * Velocity, Sprite.Position.Y);
             }
 
-            if (Game.InputState.KeyDown(Keys.D) || Game.InputState.KeyDown(Keys.Right))
+            if (Game.InputState.KeysDown(false, Keys.D, Keys.Right))
             {
                 Sprite.Position = new Vector2(Sprite.Position.X + deltaTime * Velocity, Sprite.Position.Y);
             }
 
-            if (Game.InputState.KeyDown(Keys.S) || Game.InputState.KeyDown(Keys.Down))
+            if (Game.InputState.KeysDown(false, Keys.S, Keys.Down))
             {
                 Sprite.Position = new Vector2(Sprite.Position.X, Sprite.Position.Y + deltaTime * Velocity);
             }
 
-            if (Game.InputState.KeyDown(Keys.W) || Game.InputState.KeyDown(Keys.Up))
+            if (Game.InputState.KeysDown(false, Keys.W, Keys.Up))
             {
                 Sprite.Position = new Vector2(Sprite.Position.X, Sprite.Position.Y - deltaTime * Velocity);
             }
 
             if (Game.InputState.KeyPressed(Keys.Space) ||
-                Game.InputState.MousePressed(MouseButton.LeftButton) ||
-                Game.InputState.MousePressed(MouseButton.RightButton))
+                Game.InputState.MultiMousePressed(false, MouseButton.LeftButton, MouseButton.RightButton))
             {
                 _fireEffectInstance.Play();
             }
