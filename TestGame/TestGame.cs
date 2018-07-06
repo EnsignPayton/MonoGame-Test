@@ -69,17 +69,16 @@ namespace TestGame
 
                     // Set position to top left corner, avoids offset by taskbars
                     Window.Position = new Point(0, 0);
-                    Window.IsBorderless = true;
-                    _graphics.ApplyChanges();
                 }
                 else
                 {
                     // Default window size
                     _graphics.PreferredBackBufferWidth = 800;
                     _graphics.PreferredBackBufferHeight = 480;
-                    Window.IsBorderless = false;
-                    _graphics.ApplyChanges();
                 }
+
+                Window.IsBorderless = !Window.IsBorderless;
+                _graphics.ApplyChanges();
             }
 
             base.Update(gameTime);
