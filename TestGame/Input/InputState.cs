@@ -9,6 +9,8 @@ namespace TestGame.Input
     /// </summary>
     public class InputState
     {
+        #region Constructor
+
         public InputState()
         {
             CurrentKeyboardState = Keyboard.GetState();
@@ -38,6 +40,10 @@ namespace TestGame.Input
                 gamePadState4
             };
         }
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// The keyboard state this frame.
@@ -69,6 +75,8 @@ namespace TestGame.Input
         /// </summary>
         public GamePadState[] PreviousGamePadStates { get; }
 
+        #endregion
+
 
         /// <summary>
         /// Update the input state for the current frame.
@@ -88,6 +96,8 @@ namespace TestGame.Input
                 CurrentGamePadStates[i] = GamePad.GetState(i);
             }
         }
+
+        #region Single State Queries
 
         /// <summary>
         /// Gets whether given key is currently being pressed.
@@ -183,6 +193,54 @@ namespace TestGame.Input
             return CurrentGamePadStates[index].IsButtonDown(button) &&
                    PreviousGamePadStates[index].IsButtonUp(button);
         }
+
+        #endregion
+
+        #region Multiple State Queries
+
+        /// <summary>
+        /// Gets whether the given keys are currently being pressed.
+        /// </summary>
+        /// <param name="all">Return true for all keys vs any key</param>
+        /// <param name="keys">The keys to query</param>
+        /// <returns>If keys are pressed</returns>
+        public bool KeysDown(bool all, params Keys[] keys)
+        {
+            bool result = all;
+
+            foreach (var key in keys)
+            {
+                if (all)
+                    result &= KeyDown(key);
+                else
+                    result |= KeyDown(key);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets whether the given buttons are being pressed this frame.
+        /// </summary>
+        /// <param name="all">Return true for all buttons vs any button</param>
+        /// <param name="buttons">The buttons to query</param>
+        /// <returns>If buttons are pressed</returns>
+        public bool MultiMousePressed(bool all, params MouseButton[] buttons)
+        {
+            bool result = all;
+
+            foreach (var button in buttons)
+            {
+                if (all)
+                    result &= MousePressed(button);
+                else
+                    result |= MousePressed(button);
+            }
+
+            return result;
+        }
+
+        #endregion
 
         private ButtonState MouseButtonToState(MouseButton button, bool useCurrent = true)
         {

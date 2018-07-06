@@ -13,8 +13,6 @@ namespace TestGame
     public class TestGame : Game
     {
         private readonly GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
-        private InputState _inputState;
 
         private Texture2D _flagTexture;
         private Song _song;
@@ -24,15 +22,18 @@ namespace TestGame
             _graphics = new GraphicsDeviceManager(this);
         }
 
+        public SpriteBatch SpriteBatch { get; private set; }
+        public InputState InputState { get; private set; }
+
         protected override void Initialize()
         {
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _inputState = new InputState();
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
+            InputState = new InputState();
 
-            Components.Add(new Player(this, _inputState, _spriteBatch));
+            Components.Add(new Player(this));
 
             base.Initialize();
         }
@@ -49,16 +50,16 @@ namespace TestGame
 
         protected override void Update(GameTime gameTime)
         {
-            _inputState.Update();
+            InputState.Update();
 
             // Exit on escape or back
-            if (_inputState.KeyDown(Keys.Escape) || _inputState.GamePadButtonDown(0, Buttons.Back))
+            if (InputState.KeyDown(Keys.Escape) || InputState.GamePadButtonDown(0, Buttons.Back))
             {
                 Exit();
             }
 
             // Change window mode only on key press, not hold
-            if (_inputState.KeyPressed(Keys.F11))
+            if (InputState.KeyPressed(Keys.F11))
             {
                 if (!Window.IsBorderless)
                 {
@@ -68,17 +69,16 @@ namespace TestGame
 
                     // Set position to top left corner, avoids offset by taskbars
                     Window.Position = new Point(0, 0);
-                    Window.IsBorderless = true;
-                    _graphics.ApplyChanges();
                 }
                 else
                 {
                     // Default window size
                     _graphics.PreferredBackBufferWidth = 800;
                     _graphics.PreferredBackBufferHeight = 480;
-                    Window.IsBorderless = false;
-                    _graphics.ApplyChanges();
                 }
+
+                Window.IsBorderless = !Window.IsBorderless;
+                _graphics.ApplyChanges();
             }
 
             base.Update(gameTime);
@@ -88,13 +88,13 @@ namespace TestGame
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin();
+            SpriteBatch.Begin();
 
-            _spriteBatch.Draw(_flagTexture, GraphicsDevice.Viewport.Bounds, Color.White);
+            SpriteBatch.Draw(_flagTexture, GraphicsDevice.Viewport.Bounds, Color.White);
 
             base.Draw(gameTime);
 
-            _spriteBatch.End();
+            SpriteBatch.End();
         }
     }
 }

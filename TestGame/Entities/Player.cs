@@ -6,31 +6,27 @@ using TestGame.Input;
 
 namespace TestGame.Entities
 {
-    public class Player : DrawableGameComponent
+    public class Player : Entity
     {
-        private readonly InputState _inputState;
-        private readonly SpriteBatch _spriteBatch;
-
         private SoundEffect _fireEffect;
         private SoundEffectInstance _fireEffectInstance;
-        private Texture2D _sprite;
-        private Vector2 _position;
-        private Point _size;
-        private Rectangle _bounds;
 
-        public Player(Game game, InputState inputState, SpriteBatch spriteBatch) : base(game)
+        public Player(TestGame game) : base(game)
         {
-            _inputState = inputState;
-            _spriteBatch = spriteBatch;
         }
+
+        public float Velocity { get; set; } = 150.0f;
 
         protected override void LoadContent()
         {
             _fireEffect = Game.Content.Load<SoundEffect>("brother1");
             _fireEffectInstance = _fireEffect.CreateInstance();
-            _sprite = Game.Content.Load<Texture2D>("hulk");
-            _size = new Point(_sprite.Width >> 1, _sprite.Height >> 1);
-            UpdateBounds();
+
+            Sprite = new Sprite
+            {
+                Texture = Game.Content.Load<Texture2D>("hulk"),
+                Size = new Vector2(256)
+            };
 
             base.LoadContent();
         }
@@ -39,62 +35,48 @@ namespace TestGame.Entities
         {
             float deltaTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (_inputState.KeyDown(Keys.A) || _inputState.KeyDown(Keys.Left))
+            if (Game.InputState.KeysDown(false, Keys.A, Keys.Left))
             {
-                _position.X -= deltaTime * 32.0f;
-                UpdateBounds();
+                Sprite.Position = Sprite.Position.SubX(deltaTime * Velocity);
             }
 
-            if (_inputState.KeyDown(Keys.D) || _inputState.KeyDown(Keys.Right))
+            if (Game.InputState.KeysDown(false, Keys.D, Keys.Right))
             {
-                _position.X += deltaTime * 32.0f;
-                UpdateBounds();
+                Sprite.Position = Sprite.Position.AddX(deltaTime * Velocity);
             }
 
-            if (_inputState.KeyDown(Keys.S) || _inputState.KeyDown(Keys.Down))
+            if (Game.InputState.KeysDown(false, Keys.S, Keys.Down))
             {
-                _position.Y += deltaTime * 32.0f;
-                UpdateBounds();
+                Sprite.Position = Sprite.Position.AddY(deltaTime * Velocity);
             }
 
-            if (_inputState.KeyDown(Keys.W) || _inputState.KeyDown(Keys.Up))
+            if (Game.InputState.KeysDown(false, Keys.W, Keys.Up))
             {
-                _position.Y -= deltaTime * 32.0f;
-                UpdateBounds();
+                Sprite.Position = Sprite.Position.SubY(deltaTime * Velocity);
             }
 
-            if (_inputState.KeyPressed(Keys.Space) ||
-                _inputState.MousePressed(MouseButton.LeftButton) ||
-                _inputState.MousePressed(MouseButton.RightButton))
+            if (Game.InputState.KeyPressed(Keys.Space) ||
+                Game.InputState.MultiMousePressed(false, MouseButton.LeftButton, MouseButton.RightButton))
             {
                 _fireEffectInstance.Play();
             }
 
-            if (_inputState.KeyPressed(Keys.Q))
+            if (Game.InputState.KeyPressed(Keys.Q))
             {
-                _size = new Point(_size.X << 1, _size.Y << 1);
-                UpdateBounds();
+                Sprite.Size = Sprite.Size * 2;
             }
 
-            if (_inputState.KeyPressed(Keys.E))
+            if (Game.InputState.KeyPressed(Keys.E))
             {
-                _size = new Point(_size.X >> 1, _size.Y >> 1);
-                UpdateBounds();
+                Sprite.Size = Sprite.Size / 2;
+            }
+
+            if (Game.InputState.KeyDown(Keys.Z))
+            {
+                Sprite.Rotation += deltaTime;
             }
 
             base.Update(gameTime);
-        }
-
-        public override void Draw(GameTime gameTime)
-        {
-            _spriteBatch.Draw(_sprite, _bounds, Color.White);
-
-            base.Draw(gameTime);
-        }
-
-        private void UpdateBounds()
-        {
-            _bounds = new Rectangle(_position.ToPoint(), _size);
         }
     }
 }
