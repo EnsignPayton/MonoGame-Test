@@ -11,6 +11,7 @@ namespace Breakanoid.Components
         }
 
         public Vector2 Velocity { get; set; }
+        public Rectangle? Walls { get; set; }
 
         protected override void LoadContent()
         {
@@ -26,8 +27,6 @@ namespace Breakanoid.Components
 
             Sprite.Position +=  Velocity * deltaTime;
 
-            CollideWithWalls();
-
             base.Update(gameTime);
         }
 
@@ -38,12 +37,11 @@ namespace Breakanoid.Components
             Velocity += -2.0f * (Vector2.Dot(Velocity, normal) * normal);
         }
 
-        public void CollideWithWalls()
+        public void CollideWithWalls(Rectangle walls)
         {
             var bounds = Sprite.Destination;
-            var walls = Game.GraphicsDevice.Viewport.Bounds;
 
-            var normal = Physics.GetWallNormal(Sprite.Destination, Game.GraphicsDevice.Viewport.Bounds);
+            var normal = Physics.GetWallNormal(Sprite.Destination, walls);
             if (normal == Vector2.Zero) return;
 
             Velocity += -2.0f * (Vector2.Dot(Velocity, normal) * normal);
@@ -57,12 +55,12 @@ namespace Breakanoid.Components
                 Sprite.Position = new Vector2(Sprite.Position.X, Sprite.Position.Y + (walls.Top - bounds.Top));
         }
 
-        public void CollideWithPaddle(Paddle paddle)
+        public void CollideWithPaddle(Paddle paddle, float speedup = 0.0f)
         {
             var normal = (Sprite.Destination.Center - paddle.Sprite.Destination.Center).ToVector2();
             normal.Normalize();
 
-            Velocity = normal * Velocity.Length();
+            Velocity = (Velocity.Length() + speedup) * normal;
         }
     }
 }

@@ -10,9 +10,11 @@ namespace Breakanoid.Components
         public Paddle(MainGame game, InputState inputState) : base(game)
         {
             _inputState = inputState;
+            Walls = game.GraphicsDevice.Viewport.Bounds;
         }
 
         public float Speed { get; set; }
+        public Rectangle Walls { get; set; }
 
         protected override void LoadContent()
         {
@@ -26,12 +28,12 @@ namespace Breakanoid.Components
         {
             float deltaTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (_inputState.KeyDown(Keys.Left) && Sprite.Position.X > Game.GraphicsDevice.Viewport.X)
+            if (_inputState.KeyDown(Keys.Left) && Sprite.Position.X > Walls.Left)
             {
                 Sprite.Position = new Vector2(Sprite.Position.X - deltaTime * Speed, Sprite.Position.Y);
             }
 
-            if (_inputState.KeyDown(Keys.Right) && Sprite.Position.X + Sprite.Size.X < Game.GraphicsDevice.Viewport.Width)
+            if (_inputState.KeyDown(Keys.Right) && Sprite.Position.X + Sprite.Size.X < Walls.Right)
             {
                 Sprite.Position = new Vector2(Sprite.Position.X + deltaTime * Speed, Sprite.Position.Y);
             }

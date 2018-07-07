@@ -20,6 +20,7 @@ namespace Breakanoid
                 builder.RegisterAssemblyTypes(assembly);
                 builder.RegisterInstance(game).AsSelf().SingleInstance();
                 builder.RegisterType<InputState>().AsSelf().SingleInstance();
+                builder.RegisterInstance(new Random()).AsSelf().SingleInstance();
 
                 game.Container = builder.Build();
                 game.Run();
