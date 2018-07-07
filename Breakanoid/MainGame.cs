@@ -96,27 +96,23 @@ namespace Breakanoid
                 Exit();
             }
 
+            var bricks = Components.OfType<Brick>().ToList();
+
             if (_inputState.KeyPressed(Keys.Space))
             {
-                var bricks = Components.OfType<Brick>();
-
                 foreach (var brick in bricks)
                 {
                     brick.Sprite.Overlay = _colors[_random.Next(_colors.Length)];
                 }
             }
 
-            // Collision detection
-            var collidingObject = Components
-                .Where(x => !(x is Ball))
-                .OfType<BaseComponent>()
-                .FirstOrDefault(x => x.Sprite.Destination.Intersects(_ball.Sprite.Destination));
+            // Collide with bricks
+            var collidingObject = bricks.FirstOrDefault(x => x.Sprite.Destination.Intersects(_ball.Sprite.Destination));
 
             if (collidingObject != null)
             {
-                //TODO: Get normal
-                var normal = -Vector2.UnitY;
-                _ball.Velocity += -2.0f * (Vector2.Dot(_ball.Velocity, normal) * normal);
+                _ball.CollideWith(collidingObject);
+                Components.Remove(collidingObject);
             }
 
             base.Update(gameTime);

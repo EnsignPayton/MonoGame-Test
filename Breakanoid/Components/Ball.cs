@@ -26,9 +26,24 @@ namespace Breakanoid.Components
 
             Sprite.Position +=  Velocity * deltaTime;
 
-            // TODO: Handle collisions
+            CollideWithWalls();
 
             base.Update(gameTime);
+        }
+
+        public void CollideWith(BaseComponent component)
+        {
+            var normal = Physics.GetNormal(Sprite.Destination, component.Sprite.Destination);
+
+            Velocity += -2.0f * (Vector2.Dot(Velocity, normal) * normal);
+        }
+
+        public void CollideWithWalls()
+        {
+            var normal = Physics.GetWallNormal(Sprite.Destination, Game.GraphicsDevice.Viewport.Bounds);
+            if (normal == Vector2.Zero) return;
+
+            Velocity += -2.0f * (Vector2.Dot(Velocity, normal) * normal);
         }
     }
 }
