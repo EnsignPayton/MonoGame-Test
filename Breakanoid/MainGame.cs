@@ -17,6 +17,7 @@ namespace Breakanoid
         private readonly GraphicsDeviceManager _graphics;
         private readonly Random _random;
         private InputState _inputState;
+        private Paddle _paddle;
         private Ball _ball;
 
         private readonly Color[] _colors = {
@@ -63,19 +64,21 @@ namespace Breakanoid
                 }
             }
 
-            Components.Add(Container.Resolve<Paddle>(paddle =>
+            _paddle = Container.Resolve<Paddle>(paddle =>
             {
                 paddle.Speed = 320.0f;
                 paddle.Sprite.Overlay = Color.Gray;
                 paddle.Sprite.Position = new Vector2(
                     GraphicsDevice.Viewport.Width / 2 - paddle.DefaultSize.X / 2,
                     GraphicsDevice.Viewport.Height - paddle.DefaultSize.Y * 2);
-            }));
+            });
+
+            Components.Add(_paddle);
 
             _ball = Container.Resolve<Ball>(ball =>
             {
                 double delta = Math.PI / 4 + _random.NextDouble() * Math.PI / 2;
-                ball.Velocity = new Vector2((float) Math.Cos(delta) * 240.0f, (float) -Math.Sin(delta) * 240.0f);
+                ball.Velocity = new Vector2((float) Math.Cos(delta), (float) -Math.Sin(delta)) * 240.0f;
                 ball.Sprite.Overlay = Color.LightGray;
                 ball.Sprite.Position = new Vector2(
                     GraphicsDevice.Viewport.Width / 2 - ball.DefaultSize.X / 2,
@@ -98,6 +101,7 @@ namespace Breakanoid
 
             var bricks = Components.OfType<Brick>().ToList();
 
+            // Recolor bricks on space
             if (_inputState.KeyPressed(Keys.Space))
             {
                 foreach (var brick in bricks)
@@ -106,13 +110,18 @@ namespace Breakanoid
                 }
             }
 
-            // Collide with bricks
+            // Collide ball with bricks
             var collidingObject = bricks.FirstOrDefault(x => x.Sprite.Destination.Intersects(_ball.Sprite.Destination));
 
             if (collidingObject != null)
             {
                 _ball.CollideWith(collidingObject);
                 Components.Remove(collidingObject);
+            }
+
+            if (_ball.Sprite.Destination.Intersects(_paddle.Sprite.Destination))
+            {
+                _ball.CollideWithPaddle(_paddle);
             }
 
             base.Update(gameTime);

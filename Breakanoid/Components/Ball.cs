@@ -40,10 +40,29 @@ namespace Breakanoid.Components
 
         public void CollideWithWalls()
         {
+            var bounds = Sprite.Destination;
+            var walls = Game.GraphicsDevice.Viewport.Bounds;
+
             var normal = Physics.GetWallNormal(Sprite.Destination, Game.GraphicsDevice.Viewport.Bounds);
             if (normal == Vector2.Zero) return;
 
             Velocity += -2.0f * (Vector2.Dot(Velocity, normal) * normal);
+
+            // Jump to avoid being stuck in wall
+            if (normal == Vector2.UnitX)
+                Sprite.Position = new Vector2(Sprite.Position.X + (walls.Left - bounds.Left), Sprite.Position.Y);
+            if (normal == -Vector2.UnitX)
+                Sprite.Position = new Vector2(Sprite.Position.X - (bounds.Right - walls.Right), Sprite.Position.Y);
+            if (normal == Vector2.UnitY)
+                Sprite.Position = new Vector2(Sprite.Position.X, Sprite.Position.Y + (walls.Top - bounds.Top));
+        }
+
+        public void CollideWithPaddle(Paddle paddle)
+        {
+            var normal = (Sprite.Destination.Center - paddle.Sprite.Destination.Center).ToVector2();
+            normal.Normalize();
+
+            Velocity = normal * Velocity.Length();
         }
     }
 }
