@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGame", "TestGame\TestGame.csproj", "{D6E4F217-0B49-4CEE-8F81-5E9949A4A2E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breakanoid", "Breakanoid\Breakanoid.csproj", "{5E060D92-8185-4C67-9746-4CDD5F04D04B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -15,6 +17,10 @@ Global
 		{D6E4F217-0B49-4CEE-8F81-5E9949A4A2E1}.Debug|x86.Build.0 = Debug|x86
 		{D6E4F217-0B49-4CEE-8F81-5E9949A4A2E1}.Release|x86.ActiveCfg = Release|x86
 		{D6E4F217-0B49-4CEE-8F81-5E9949A4A2E1}.Release|x86.Build.0 = Release|x86
+		{5E060D92-8185-4C67-9746-4CDD5F04D04B}.Debug|x86.ActiveCfg = Debug|x86
+		{5E060D92-8185-4C67-9746-4CDD5F04D04B}.Debug|x86.Build.0 = Debug|x86
+		{5E060D92-8185-4C67-9746-4CDD5F04D04B}.Release|x86.ActiveCfg = Release|x86
+		{5E060D92-8185-4C67-9746-4CDD5F04D04B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
