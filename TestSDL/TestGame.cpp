@@ -1,5 +1,5 @@
 #include "TestGame.h"
-
+#include <SDL_>
 
 namespace TestSDL
 {
@@ -23,15 +23,21 @@ namespace TestSDL
 
 	void TestGame::LoadMedia()
 	{
-		_imageSurface = SDL_LoadBMP("hello_world.bmp");
+		SDL_Surface* rawSurface = SDL_LoadBMP("hello_world.bmp");
 
-		if (_imageSurface == nullptr)
+		if (rawSurface == nullptr)
 		{
 			throw std::exception("SDL BMP Load Error");
 		}
 
-		SDL_BlitSurface(_imageSurface, nullptr, GetWindowSurface(), nullptr);
-		SDL_UpdateWindowSurface(GetWindow());
+		_imageSurface = SDL_ConvertSurface(rawSurface, GetWindowSurface()->format, 0);
+
+		SDL_FreeSurface(rawSurface);
+
+		if (_imageSurface == nullptr)
+		{
+			throw std::exception("SDL Image Convert Error");
+		}
 	}
 
 	void TestGame::Update()
@@ -46,6 +52,16 @@ namespace TestSDL
 
 	void TestGame::Draw()
 	{
+		SDL_FillRect(GetWindowSurface(), nullptr, 0);
+
+		SDL_Rect destination =
+		{
+			0, 0, GetWindowWidth(), GetWindowHeight()
+		};
+
+		SDL_BlitScaled(_imageSurface, nullptr, GetWindowSurface(), &destination);
+
+		SDL_UpdateWindowSurface(GetWindow());
 	}
 
 	void TestGame::OnEvent(SDL_Event e)

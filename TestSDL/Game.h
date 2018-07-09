@@ -26,6 +26,9 @@ namespace TestSDL
 
 		void Exit();
 
+		int GetWindowWidth() { return _windowWidth; };
+		int GetWindowHeight() { return _windowHeight; };
+
 		SDL_Window* GetWindow() { return _window; };
 		SDL_Surface* GetWindowSurface() { return _windowSurface; };
 		KeyboardState& GetKeyboardState() { return _keyboardState; };
