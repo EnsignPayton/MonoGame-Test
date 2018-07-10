@@ -5,7 +5,6 @@
 
 namespace TestSDL
 {
-	// TODO: Unseal when I figure out proper inheritance handling in C++
 	class Game
 	{
 	public:

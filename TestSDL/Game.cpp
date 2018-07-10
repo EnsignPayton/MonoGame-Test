@@ -1,5 +1,6 @@
 #include "Game.h"
 #include <iostream>
+#include <SDL_image.h>
 
 namespace TestSDL
 {
@@ -9,7 +10,17 @@ namespace TestSDL
 	{
 		if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		{
-			throw std::exception("SDL Initialization Error");
+			SDL_GetError();
+			std::string message = "SDL Initialization Error";
+			throw std::runtime_error(message + SDL_GetError());
+		}
+
+		int imgFlags = IMG_INIT_JPG;
+
+		if (!(IMG_Init(imgFlags) & imgFlags))
+		{
+			std::string message = "SDL Image Initialization Error";
+			throw std::runtime_error(message + IMG_GetError());
 		}
 
 		_window = SDL_CreateWindow(_windowTitle.c_str(),
@@ -19,14 +30,14 @@ namespace TestSDL
 
 		if (_window == nullptr)
 		{
-			throw std::exception("SDL Window Creation Error");
+			throw std::runtime_error("SDL Window Creation Error");
 		}
 
 		_windowSurface = SDL_GetWindowSurface(_window);
 
 		if (_windowSurface == nullptr)
 		{
-			throw std::exception("SDL Surface Creation Error");
+			throw std::runtime_error("SDL Surface Creation Error");
 		}
 	}
 
